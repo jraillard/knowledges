@@ -31,15 +31,3 @@ I created them as free resources in order to not spend time to recover knowledge
 ## Contribution
 
 If you’d like to contribute to this project or talk about anything i wrote, feel free to reach out to me on my [LinkedIn](https://www.linkedin.com/in/julien-raillard).
-
----
-
-## Fun fact about me
-
-You may have notice that my Github profile picture is a [Squirtle](https://www.pokepedia.fr/Carapuce). :eyes:
-
-As i was a child, he used to be my favorite pokemon starter.
-
-So i take the decision to make it my profile picture in almost all tech-relative accounts i have, and then update it as [Wartortle](https://www.pokepedia.fr/Carabaffe) and [Blastoise](https://www.pokepedia.fr/Tortank) as i would progress in my developper career.
-
-Funny right ? :grin:
