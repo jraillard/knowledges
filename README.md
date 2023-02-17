@@ -22,11 +22,9 @@ I created them as free resources in order to not spend time to recover knowledge
 
 - `Articles` - [Links](articles/README.md) to some articles i've written :pencil2:
 
-- `Resources` - [Links] to youtube channel or twitter from people / organisms i follow for their tech content
+- `Resources` - [Links](resources/README.md) to youtube channel or twitter from people / organisms i follow for their tech content
 
-- `And also ...`
-
-> Incoming : [Labs](https://www.cadremploi.fr/editorial/conseils/conseils-carriere/le-proof-of-concept) where i'll share some PoC :bulb:
+- `Labs` - [Links](./labs/README.md) to find some funny [PoCs](https://www.cadremploi.fr/editorial/conseils/conseils-carriere/le-proof-of-concept) :bulb:
 
 ## Contribution
 

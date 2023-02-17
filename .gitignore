@@ -1,1 +1,6 @@
+# Obsidian editor files
 *obsidian*
+
+# Terraform states
+**/states/**
+**/.terraform/providers
