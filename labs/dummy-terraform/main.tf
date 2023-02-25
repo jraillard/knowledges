@@ -32,6 +32,14 @@ resource "azurerm_windows_web_app" "dummy_wa" {
   resource_group_name = azurerm_resource_group.dummy_rg.name
   service_plan_id     = azurerm_service_plan.dummy_service_plan.id
 
+  /*
+   Setting up the managed identity 
+   See https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=portal%2Chttp
+  */
+  identity {
+    type = "SystemAssigned"
+  }
+
   # For deeper configs ...
   site_config {
     always_on = false # cannot be true for free app service (is true by default)
@@ -41,7 +49,7 @@ resource "azurerm_windows_web_app" "dummy_wa" {
   app_settings = {
     # Storage account primary key allowing to create SAS keys
     # ==> Stored in keyvault instead
-    SA_PRIMARY_KEY = ""
+    SA_PRIMARY_KEY = "@Microsoft.KeyVault(SecretUri=${module.keyvault.sa_pkey_uri})"
   }
 }
 
@@ -56,6 +64,7 @@ module "keyvault" {
   resource_group_location = azurerm_resource_group.dummy_rg.location
   resource_group_name     = azurerm_resource_group.dummy_rg.name
   sa_primary_key          = azurerm_storage_account.dummy_sa.primary_access_key
+  app_service_pid         = azurerm_windows_web_app.dummy_wa.identity[0].principal_id
 
   # Useless but ...
   depends_on = [

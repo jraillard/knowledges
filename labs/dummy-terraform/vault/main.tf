@@ -9,24 +9,37 @@ resource "azurerm_key_vault" "dummy-kv" {
   purge_protection_enabled    = false
 
   sku_name = "standard"
+}
 
-  access_policy {
-    tenant_id = var.azurerm_tenant_id
-    object_id = var.azurerm_object_id
+# Resources for adding acces policies to key vault
+# Azure account Policy (object_id)
+resource "azurerm_key_vault_access_policy" "keyvault_aza_policy" {
+  key_vault_id = azurerm_key_vault.dummy-kv.id
+  tenant_id    = var.azurerm_tenant_id
+  object_id    = var.azurerm_object_id
 
-    # You must give permission in order to manage azure key vault secrets, keys and storage configuration 
-    key_permissions = [
-      "Get",
-    ]
+  # Basic permission for key (don't use it)
+  key_permissions = [
+    "Get",
+  ]
+  # More permissions for key (in order to edit through tf applies)
+  secret_permissions = [
+    "Get", "Set", "Delete"
+  ]
+  # Basic permission for key (don't use it)
+  storage_permissions = [
+    "Get",
+  ]
+}
+# AppService policy
+resource "azurerm_key_vault_access_policy" "keyvault_appservice_policy" {
+  key_vault_id = azurerm_key_vault.dummy-kv.id
+  tenant_id    = var.azurerm_tenant_id
+  object_id    = var.app_service_pid
 
-    secret_permissions = [
-      "Get", "Set", "Delete"
-    ]
-
-    storage_permissions = [
-      "Get",
-    ]
-  }
+  secret_permissions = [
+    "Get"
+  ]
 }
 
 # Resource for adding secrets on key vault

@@ -30,3 +30,8 @@ variable "sa_primary_key" {
   type        = string
   sensitive   = true # as it is a secret, it mustn't be shown through logs / outputs !
 }
+
+variable "app_service_pid" {
+  description = "App service principal id"
+  type        = string
+}

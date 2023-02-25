@@ -21,10 +21,13 @@ My dummy infrastructure is made of :
 - an [azure app service](https://azure.microsoft.com/en-us/products/app-service/) running on windows and inside of an azure app plan (azure mandatory feature) ;
 
   > Allowing us to host our web app (as it's not the purpose of this lab there's not but you got the point :bulb:)
+  > **See app_settings too** :eyes:
+
+  &rarr; We get the storage account primary by calling the key vault instead of just copy it here :bulb:
 
 - an [azure storage account](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview) ;
 
-  > Allowing us to store the storage account primary key (i finnaly moved it in a key vault but if you want to test it, i let the app_settings in order to do it :smiley:)
+  > Allowing us to store some data
 
 - an [azure key vault](https://learn.microsoft.com/en-us/azure/key-vault/general/basic-concepts).
   > Allowing us to store the storage account primary key in a secure way (as it is a sensible secret)
