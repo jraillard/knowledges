@@ -5,7 +5,7 @@ This project have for only purpose to discover `Terraform` tool in order to prov
 For further information about this stacks see :
 
 - [HCL cheat sheet](../../cheat-sheets/langages/hcl.md)
-- [Terraform cheat sheet](../../cheat-sheets/tools/hashicorp/terraform.md)
+- [Terraform cheat sheet](../../cheat-sheets/tools/iac/terraform.md)
 - [Terraform official doc](https://developer.hashicorp.com/terraform/registry/providers/docs)
 
 ---
