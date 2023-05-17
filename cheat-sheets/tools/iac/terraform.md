@@ -200,3 +200,9 @@ foreach($result in $results)
     }
 }
 ```
+
+# To go further 
+
+- Handle multiples azure tenants / subscriptions into a single terraform project &rarr; See [this](https://jeffbrown.tech/terraform-azure-multiple-subscriptions/) article.
+
+&rarr; Basically add tenantId / subscriptionId in `azurerm` provider 
