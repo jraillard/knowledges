@@ -16,15 +16,14 @@ I created them as free resources in order to not spend time to recover knowledge
 
 ## Content
 
-- `Cheat-Sheets` - References ans usages for various tools and technologies
+- `Cheat-Sheets` - References and usages for various tools and technologies
 
   > Think about downloading [obsidian](https://obsidian.md/) in order to travel through :runner:
 
-- `Articles` - [Links](articles/README.md) to some articles i've written :pencil2:
+- `Articles & Podcasts` - [Links](articles/README.md) to some articles i've written :pencil2: and podcasts i've been on :microphone:
 
-- `Resources` - [Links](resources/README.md) to youtube channel or twitter from people / organisms i follow for their tech content
+- `Resources` - [Links](resources/README.md) to youtube channel or twitter from people / organisms to follow
 
-- `Labs` - [Links](./labs/README.md) to find some funny [PoCs](https://www.cadremploi.fr/editorial/conseils/conseils-carriere/le-proof-of-concept) :bulb:
 
 ## Contribution
 

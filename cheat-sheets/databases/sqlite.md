@@ -9,3 +9,4 @@ You can open a SQLite Database with `sqlite3 <filename>` directly.
 ## Commands
 
 `.help` Shows all commands `.databases` Show all existing databases `.quit` Exists `.tables` Shows all tables `.backup` Backups current database
+
