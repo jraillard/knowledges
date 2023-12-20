@@ -1,8 +1,8 @@
 # Linux folders structure
 
-Here's a reminder on linux folders structure and the purpose and each of them.
+Here's a reminder on linux folders structure and the purpose from each of them.
 
-:pray: Thanks @fireship for his clean explanation [right here](https://www.youtube.com/watch?v=42iQKuQodW4&list=WL&index=1)
+:pray: Thanks @fireship for his clean explanation [right here](https://www.youtube.com/watch?v=42iQKuQodW4&list=WL&index=1).
 
 
 # Schema
