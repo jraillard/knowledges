@@ -32,6 +32,9 @@ Here's a list of some content creators you should follow if not already done :st
 
   :book: [@EmilienGuilmineau](https://www.emilien-guilmineau.fr/posts/) - official personnal blog
 
+- `Cosden` : a react developper oriented on global frontend app development
+  
+    :tv: [@cosdensolutions](https://www.youtube.com/@cosdensolutions) - official YouTube channel
 
 # Company / Community creators
 
