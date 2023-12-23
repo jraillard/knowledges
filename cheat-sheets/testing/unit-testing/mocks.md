@@ -1,208 +1,45 @@
 # Mocks
 
-When writing units test, you'll always come to a point where the method under test have any dependencies and therefore need to use something called `Mocks`.
+When writing units test, you'll always come to a point where the method under test have some dependencies and therefore need to use something called `Mocks`.
 
-:pray: Thanks @GuiFerreira for his clean explanation [right here](https://www.youtube.com/watch?v=D0dCa9XO4z0&t=3s).
+:pray: First of all I would like to thank the following resources to shed light on this subject :
+- @GuiFerreira for his clean explanation [right here](https://www.youtube.com/watch?v=D0dCa9XO4z0&t=3s)
+- @Mark Seemann of his [article](https://learn.microsoft.com/en-us/archive/msdn-magazine/2007/september/unit-testing-exploring-the-continuum-of-test-doubles) from MSDN Magazine articles
+- @GerardMeszaros for his [XUnit test patterns book](http://xunitpatterns.com/Test%20Double.html) that stand the basics of the Test double continuum.
 
-First of all `Mock` is a common used term for what should be more called `test doubles`.
+First of all, after reading those resources, you'll find that `Mock` is a common used term for what should be more called `test doubles`.
 They are multiple `test double types` and they all have one purpose.
 
-You can divide them into two test approaches :
-- State verification :
-  - Dummy
-  - Stub
-  - Spy
-  - Fake
-- Behavior verification :
-  - Mock
+| Test Double Type | Description |
+| --- | --- |
+Dummy |	The simplest, most primitive type of test double. Dummies **contain no implementation** and are mostly used when required as parameter values, but not otherwise utilized. `Nulls can be considered dummies, but real dummies are derivations of interfaces or base classes without any implementation at all`.
+Stub |	A step up from dummies, stubs are minimal implementations of interfaces or base classes. `Methods returning void will typically contain no implementation at all, while methods returning values will typically return hard-coded values`.
+Spy	| A test spy is similar to a stub, but besides giving clients an instance on which to invoke members, `a spy will also record which members were invoked so that unit tests can verify that members were invoked as expected`.
+Fake |	A fake contains more complex implementations, typically handling interactions between different members of the type it's inheriting. While not a complete production implementation, `a fake may resemble a production implementation, albeit with some shortcuts`.
+Mock | 	A mock is dynamically created by a mock library (the others are typically produced by a test developer using code). The test developer never sees the actual code implementing the interface or base class, but can configure the mock to provide return values, expect particular members to be invoked, and so on. `Depending on its configuration, a mock can behave like a dummy, a stub, or a spy`.
 
-:bulb: Notice that common used libraries doesnt always expose those names explicitly, you most often just see `mock` type but instead they offer a way to achieve the same goal (more or less).
+:bulb: They seems to be totally distinct, but if you're reading previous resources you'll see that's clearly not the case in real-world.
 
-:clipboard: Code samples stands as **samples**, you might want to create something like custom creators base on it in order to make their implementation fluent.
+A good way to see it is the following [figure](https://learn.microsoft.com/en-us/archive/msdn-magazine/2007/september/images/cc163358.fig02.gif) that shows that our dependency replacement could behave into 1, 2 or even 3 test double type.
 
-# Test Doubles 
+# When to use specified test double ?
 
-In his video, @GuiFerreira expose a way writing your test doubles by your own so if you want to see how to achieve it, go check it out :smiley:
+Every resources shows how to implement test double manually but they all come to the fact that `Mock` is a simple way of creating them with less line of code and better maintanibility capabilities (as you're not creating new files / object for every needs).
 
-Here i'll be focusing on achieving it in C#, using `Nsubstitute` library for mocks and `FluentAssertions` as assertion library.
+Moreover you can come to a case where you'll to combine dummy, spy and stub behavior at same time for instance so that `Mock` seems to be more adapted.
 
-## State Verification
+The following table resume that well : 
 
-### Dummy 
+| Test Double Type | Advantages | Disadvantages |
+| --- | --- | --- |
+Dummy |	Very easy to create. |	Not very useful.
+Stub | Easy to create. | Limited flexibility. Opaque when observed from unit tests. No ability to verify that members were invoked correctly.
+Spy | Can verify that members are invoked correctly. | Limited flexibility. Opaque when observed from unit tests.
+Fake | 	Offers a semi-complete implementation that can be used in many different scenarios. | Harder to create. May be so complex that it requires unit testing in itself.
+Mock | 	Efficient creation of test doubles. | Can verify that members are invoked correctly. Transparent when observed from unit tests.
 
-You want to use a `dummy` when your service under test have a dependency you need to provide but **should do nothing either being injected**. 
+# How to implement my mocks then ?
 
-&rarr; The methods it could have should never be called and crash the test if it appends.
+As I said before even though creating Dummy, Stub, Spies, and Fake manually could seem boring, mocking library offers different opinionated way to do so.
 
-```c#
-public void Dummy_WhenUserIsNull_ShouldThrowArgumentNullException()
-{
-    // Arrange    
-    var userRepository = Substitute.For<IUserRepository>();
-    var userService = new UserService(userRepository);
-    
-    // Act
-    var act = () =>  userService.AddNewUser(null!);
-
-    // Assert
-    act.Should().Throw<ArgumentNullException>();
-
-    userRepository.ReceivedCalls().Should().BeEmpty();
-}
-```
-
-### Stub
-
-You want to use a `Stub` use it when you have one or multiple dependencies that should return a known value.
-
-:warning: Again you also want to checks that the configured calls are the only to be called.
-
-```c#
-[Fact]
-public void Stub_WhenRepositorySavesSuccessfully_ThenReturnsOk()
-{
-    // Arrange       
-    var userRepository = Substitute.For<IUserRepository>();
-    userRepository.Save(Arg.Any<User>()).Returns(true);
-
-    var userService = new UserService(userRepository);
-    
-    // Act
-    var result = userService.AddNewUser(new User(1, "John Doe"));
-
-    // Assert
-    result.Should().Be(UserServiceResult.Success);
-
-    userRepository.Received(1).Save(Arg.Any<User>());
-    userRepository.ReceivedCalls().Should().HaveCount(1); // the number depends on calls you configured
-}
-```
-
-### Spy
-
-You want to use a `Spy` when :
-- you need to check that specified methods on spied on dependency have been called x times
-- you need to check that specified methods on spied on dependency have been called using specified arguments
-
-:warning: Again you also want to checks that the configured calls are the only to be called
-
-```c#
-[Fact]
-public void Spy_RepositorySavesCorrectUserOnce()
-{
-    // Arrange       
-    var userRepository = Substitute.For<IUserRepository>();        
-    var userService = new UserService(userRepository);
-    var user = new User(1, "John Doe");
-    userRepository.Save(Arg.Any<User>()).Returns(true);
-
-    // Act
-    var result = userService.AddNewUser(user);
-
-    // Assert
-    result.Should().Be(UserServiceResult.Success);
-    
-    // Solution 1 : Using Arg predicate (if parameters isnt complex object)
-    userRepository.Received(1).Save(Arg.Is<User>(x => x.Id == user.Id && x.Name == user.Name));
-
-    // Solution 2 : Without using Arg predicate (if parameters is complex object)
-    // First check for call on save method to avoid IndexOutOfRangeException under if Save() isnt called
-    userRepository.Received(1).Save(Arg.Any<User>());
-
-    // Then check for call on save method with correct user        
-    var callToSave = userRepository.ReceivedCalls().ToList()[0];
-    var userSendToSaveMethod = callToSave.GetArguments()[0];
-    userSendToSaveMethod.Should().Be(user);        
-
-    // Check for call on any other method
-    userRepository.ReceivedCalls().Should().HaveCount(1);  
-}
-```
-
-### Fake
-
-A `Fake` is a simple implementation of an interface you want to replace, faking his behavior.
-This mean you will be able to replace de underlying behavior and then expose a method to assert the state of the fake.
-
-For instance, let's say we want to replace the `UserRepository` by an InMemory one;
-
-```c#
-[Fact]
-public void Fake_RepositorySavesUser()
-{
-    // Arrange       
-    var userRepository = Substitute.For<IUserRepository>();
-    var user = new User(1, "John Doe");
-    
-    // Here we'll return true by default so that we could check AddNewUser() method result AND fake behavior
-    userRepository.Save(Arg.Any<User>()).Returns(true);
-
-    // Specify the behavior by implementing a callback
-    Dictionary<int, User> users = new();       
-    userRepository
-        .When(x => x.Save(Arg.Any<User>()))
-        .Do(x => users.Add(x.Arg<User>().Id, x.Arg<User>()));
-
-    var userService = new UserService(userRepository);
-    
-    // Act
-    var result = userService.AddNewUser(user);
-
-    // Assert
-    result.Should().Be(UserServiceResult.Success);
-
-    // Equivalent to a Fake.Verify() method
-    users.Should().ContainKey(user.Id);
-    users[user.Id].Should().Be(user);
-
-    // Check for configured call
-    userRepository.Received(1).Save(user);
-    userRepository.ReceivedCalls().Should().HaveCount(1);
-}
-```
-
-## Behavior Verification
-
-### Mock
-
-`Mock` is quite similar to the `Spy` but they differ by being assigned to two different approaches :
-- A `Spy` belongs to state verification tests, meaning you only have to check the state of the configured mocked (parameters send and called on it made)
-- A `Mock` belongs to behavior verification tests, meaning you'll define expectations on the mock and then ask him to verify himslef that they have been granted 
-
-For instance you can specify that a mock :
-- Returns a specified value for a specific entry
-- Throws an exception for others
-
-```c#
-[Fact]
-public void Mock_RepositorySavesCorrectUserOnce()
-{
-    // Arrange       
-    var userRepository = Substitute.For<IUserRepository>();
-    var user = new User(1, "John Doe");
-    
-    // Whenever the value passed in, you're suppose make your return so that the next steps from the code under test can be executed
-    userRepository.Save(Arg.Any<User>()).Returns(true);
-
-    // Specify the behavior by implementing a callback
-    bool isCallCorrect = true;
-    userRepository
-        .When(x => x.Save(Arg.Is<User>(x => x.Id != user.Id)))
-        .Do(x => isCallCorrect = false);            
-
-    var userService = new UserService(userRepository);
-    
-    // Act
-    var result = userService.AddNewUser(new User(1, "John Doe"));
-
-    // Assert
-    result.Should().Be(UserServiceResult.Success);
-
-    // Equivalent to a Moq.Verify() method
-    isCallCorrect.Should().BeTrue();
-
-    // Check for configured call
-    userRepository.Received(1).Save(user);
-    userRepository.ReceivedCalls().Should().HaveCount(1);
-}
-```
+[Here](./mocks.nsubstitute.md) I'll explore it with C# `Nsubstitute` as a mocking library and `FluentAssertions` as assertion library :rocket:.
