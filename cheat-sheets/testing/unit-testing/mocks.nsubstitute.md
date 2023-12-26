@@ -40,7 +40,7 @@ dummySubjectUnderTest.ReceivedCalls().Should().BeEmpty();
 ## Stub
 
 NSubstitute allows you to setup returns from specified methods :
-- Without any rules with `Returns()` / `ReturnsAsync()` 
+- Without any rules with `Returns()` / `Returns(Task.FromResult(...))` 
 - Depending on method arguments by combining previous methods with the [argument matcher](https://nsubstitute.github.io/help/argument-matchers/) feature
 - Depending on an [executed function](https://nsubstitute.github.io/help/return-from-function/) (but we might not need it oftenly)
 
@@ -49,6 +49,8 @@ NSubstitute allows you to setup returns from specified methods :
 Another nice feature is the [ReturnsForAll() feature](https://nsubstitute.github.io/help/return-for-all) allowing you to return a value for every methods that returns the same type.
 
 &rarr; Could be usefull when you have multiple signature of a method to stub :smiley:
+
+:clipboard: I didnt talk about some other feature which i would call `syntaxic sugar` such as : **ReturnForAnyArgs()**, **ReturnsNul()**, etc.
 
 ## Spy
 
